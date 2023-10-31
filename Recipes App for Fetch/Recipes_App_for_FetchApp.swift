@@ -11,7 +11,7 @@ import SwiftUI
 struct Recipes_App_for_FetchApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView(viewModel: <#HomeViewModel#>)
         }
     }
 }
