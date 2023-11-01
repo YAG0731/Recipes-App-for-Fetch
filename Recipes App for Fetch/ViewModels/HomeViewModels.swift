@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MealsResponse: Decodable {
-    let meals: [Meal]
+    var meals: [Meal]
 }
 
 enum RecipeSortOption {
@@ -21,13 +21,21 @@ class HomeViewModel: ObservableObject {
     @Published var sortOption: RecipeSortOption = .alphabetical
     
     func fetchRecipes() {
-        // Clear the existing recipes.
         recipes = []
         
         if let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") {
             URLSession.shared.dataTask(with: url) { data, response, error in
                 if let data = data {
-                    if let decodedResponse = try? JSONDecoder().decode(MealsResponse.self, from: data) {
+                    if var decodedResponse = try? JSONDecoder().decode(MealsResponse.self, from: data) {
+                        // Filter out any null or empty values and print them
+                        decodedResponse.meals = decodedResponse.meals.filter { meal in
+                            if meal.strMeal.isEmpty || meal.idMeal.isEmpty {
+                                print("Null or empty value found: strMeal = \(meal.strMeal), idMeal = \(meal.idMeal)")
+                                return false
+                            }
+                            return true
+                        }
+                        
                         DispatchQueue.main.async {
                             self.recipes = decodedResponse.meals
                             self.sortRecipes()
@@ -39,7 +47,7 @@ class HomeViewModel: ObservableObject {
             }.resume()
         }
     }
-    
+
     func toggleSortOrder() {
         switch sortOption {
         case .alphabetical:

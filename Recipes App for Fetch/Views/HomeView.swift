@@ -23,7 +23,6 @@ struct HomeView: View {
                             .onTapGesture {
                                 viewModel.toggleSortOrder()
                             }
-                        
                     }
                 }
 
