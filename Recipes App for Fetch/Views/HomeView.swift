@@ -13,17 +13,17 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Sort Recipes")) {
-                    Button(action: {
-                        viewModel.sortRecipes(by: .alphabetical)
-                    }) {
-                        Text("Alphabetical Order")
-                    }
-
-                    Button(action: {
-                        viewModel.sortRecipes(by: .reverseAlphabetical)
-                    }) {
-                        Text("Reverse Alphabetical Order")
+                Section() {
+                    HStack {
+                        Text("Desserts")
+                        Spacer()
+                        Image(viewModel.sortOption == .alphabetical ? "icons8-alphabetical-sorting-2-72(@3×)" : "icons8-sort-72(@3×)")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .onTapGesture {
+                                viewModel.toggleSortOrder()
+                            }
+                        
                     }
                 }
 
@@ -41,4 +41,5 @@ struct HomeView: View {
         }
     }
 }
+
 
