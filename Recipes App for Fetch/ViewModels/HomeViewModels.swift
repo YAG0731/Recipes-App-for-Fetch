@@ -11,35 +11,33 @@ struct MealsResponse: Decodable {
     let meals: [Meal]
 }
 
+enum RecipeSortOption {
+    case alphabetical
+    case reverseAlphabetical
+}
+
 class HomeViewModel: ObservableObject {
     @Published var recipes: [Meal] = []
-    @Published var currentPage: Int = 1
-    @Published var isLoading: Bool = false
-    @Published var hasMorePages: Bool = true
+    @Published var sortOption: RecipeSortOption = .alphabetical
 
     func fetchRecipes() {
-        // If we are already loading or there are no more pages, return early.
-        if isLoading || !hasMorePages {
-            return
+        // Clear the existing recipes.
+        recipes = []
+
+        var sortOptionParam: String
+        switch sortOption {
+            case .alphabetical:
+                sortOptionParam = "name"
+            case .reverseAlphabetical:
+                sortOptionParam = "name"
         }
 
-        isLoading = true
-
-        if let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert&p=\(currentPage)") {
+        if let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert&s=\(sortOptionParam)") {
             URLSession.shared.dataTask(with: url) { data, response, error in
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                }
-
                 if let data = data {
                     if let decodedResponse = try? JSONDecoder().decode(MealsResponse.self, from: data) {
                         DispatchQueue.main.async {
-                            if decodedResponse.meals.isEmpty {
-                                self.hasMorePages = false
-                            } else {
-                                self.recipes += decodedResponse.meals
-                                self.currentPage += 1
-                            }
+                            self.recipes = decodedResponse.meals
                         }
                         return
                     }
@@ -48,13 +46,10 @@ class HomeViewModel: ObservableObject {
             }.resume()
         }
     }
-    
-    func loadMoreContentIfNeeded(currentItem: Meal?) {
-        guard !isLoading && hasMorePages else { return }
 
-        if let currentItem = currentItem, currentItem == recipes.last {
-            fetchRecipes()
-        }
+    func sortRecipes(by sortOption: RecipeSortOption) {
+        // Change the sorting option and fetch recipes based on the selected option.
+        self.sortOption = sortOption
+        fetchRecipes()
     }
-    
 }
