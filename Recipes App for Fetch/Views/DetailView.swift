@@ -7,12 +7,24 @@
 
 import SwiftUI
 
-struct DetailView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+//struct DetailView: View {
+//    var recipe: RecipeDetail
+//    @ObservedObject var viewModel: HomeViewModel
+//
+//    var body: some View {
+//        VStack {
+//            Text(recipe.strMeal)
+//                .font(.title)
+//            Text("Instructions: \(recipe.instructions)")
+//            List(recipe.ingredients, id: \.name) { ingredient in
+//                Text("\(ingredient.name) - \(ingredient.measurement)")
+//            }
+//        }
+//        .padding()
+//        .navigationTitle("Recipe Detail")
+//        .onAppear {
+//            viewModel.fetchRecipeDetails(recipeId: recipe.id)
+//        }
+//    }
+//}
 
-#Preview {
-    DetailView()
-}

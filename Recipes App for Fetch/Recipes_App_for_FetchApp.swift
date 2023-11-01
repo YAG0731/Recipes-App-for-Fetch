@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct Recipes_App_for_FetchApp: App {
+    @StateObject private var homeViewModel = HomeViewModel()
     var body: some Scene {
         WindowGroup {
-            HomeView(viewModel: <#HomeViewModel#>)
+            HomeView(viewModel: homeViewModel)
         }
     }
 }
