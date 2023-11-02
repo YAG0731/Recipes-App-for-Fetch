@@ -28,7 +28,9 @@ struct HomeView: View {
 
                 Section(header: Text("Recipes")) {
                     ForEach(viewModel.recipes, id: \.idMeal) { recipe in
-                        RecipeRow(recipe: recipe)
+                        NavigationLink(destination: RecipeDetailView(recipeID: recipe.idMeal)) {
+                            RecipeRow(recipe: recipe)
+                        }
                     }
                 }
             }
@@ -40,5 +42,6 @@ struct HomeView: View {
         }
     }
 }
+
 
 

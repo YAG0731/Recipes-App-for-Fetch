@@ -5,10 +5,17 @@
 //  Created by Yunao Guo on 10/31/23.
 //
 
+//
+//  HomeViewModel.swift
+//  RecipesApp-Fetch
+//
+//  Created by Yunao Guo on 10/31/23.
+//
+
 import SwiftUI
 
 struct MealsResponse: Decodable {
-    var meals: [Meal]
+    var meals: [Recipe]
 }
 
 enum RecipeSortOption {
@@ -17,12 +24,13 @@ enum RecipeSortOption {
 }
 
 class HomeViewModel: ObservableObject {
-    @Published var recipes: [Meal] = []
+    @Published var recipes: [Recipe] = []
     @Published var sortOption: RecipeSortOption = .alphabetical
+    @Published var selectedRecipe: Recipe?
     
     func fetchRecipes() {
         recipes = []
-        
+
         if let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") {
             URLSession.shared.dataTask(with: url) { data, response, error in
                 if let data = data {
@@ -67,9 +75,7 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    func sortRecipes(by sortOption: RecipeSortOption) {
-        // Change the sorting option and sort the recipes based on the selected option.
-        self.sortOption = sortOption
-        sortRecipes()
+    func onRecipeSelected(recipe: Recipe) {
+        selectedRecipe = recipe
     }
 }
