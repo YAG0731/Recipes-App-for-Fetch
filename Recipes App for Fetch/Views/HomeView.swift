@@ -29,7 +29,11 @@ struct HomeView: View {
                 Section(header: Text("Recipes")) {
                     ForEach(viewModel.recipes, id: \.idMeal) { recipe in
                         NavigationLink(destination: RecipeDetailView(recipeID: recipe.idMeal)) {
-                            RecipeRow(recipe: recipe)
+                            HStack {
+                                Spacer()
+                                RecipeRow(recipe: recipe)
+                                Spacer()
+                            }
                         }
                     }
                 }
@@ -41,6 +45,19 @@ struct HomeView: View {
             .navigationBarTitle("Recipes")
         }
     }
+}
+
+#Preview {
+    let sampleRecipes: [Recipe] = [
+        Recipe(idMeal: "1", strMeal: "Sample Recipe 1", strMealThumb: "sample-image-1"),
+        Recipe(idMeal: "2", strMeal: "Sample Recipe 2", strMealThumb: "sample-image-2"),
+        Recipe(idMeal: "3", strMeal: "Sample Recipe 3", strMealThumb: "sample-image-3")
+    ]
+    
+    let viewModel = HomeViewModel()
+    viewModel.recipes = sampleRecipes
+    
+    return HomeView(viewModel: viewModel)
 }
 
 

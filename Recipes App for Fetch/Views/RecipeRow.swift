@@ -10,7 +10,7 @@ import SwiftUI
 struct RecipeRow: View {
     var recipe: Recipe
     @State private var image: Image = Image("Fetch_PrimaryLogo")
-
+    
     var body: some View {
         VStack {
             image
@@ -31,17 +31,15 @@ struct RecipeRow: View {
             
             Text(recipe.strMeal)
                 .font(.headline)
+                .fontDesign(.serif)
+                .padding([.top],5)
         }
     }
 }
 
-
-struct RecipeRow_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleMeal = Recipe(idMeal: "12345", strMeal: "Sample Recipe", strMealThumb: "https://www.themealdb.com//images//media//meals//xvsurr1511719182.jpg")
-        
-        return RecipeRow(recipe: sampleMeal)
-            .previewLayout(.fixed(width: 300, height: 200))
-    }
+#Preview {
+    let sampleMeal = Recipe(idMeal: "12345", strMeal: "Sample Recipe", strMealThumb: "https://www.themealdb.com//images//media//meals//xvsurr1511719182.jpg")
+    
+    return RecipeRow(recipe: sampleMeal)
+        .previewLayout(.fixed(width: 300, height: 200))
 }
-
