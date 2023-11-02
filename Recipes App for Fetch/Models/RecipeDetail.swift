@@ -12,13 +12,13 @@ struct RecipeDetail: Decodable {
     let strMeal: String
     let strMealThumb: String
     let strInstructions: String
-    let ingredients: [String]
-    let measurements: [String]
+    var ingredients: [String]
+    var measurements: [String]
     let strYoutube: String
     let strSource: String
     let strCategory: String
     let strArea: String
-
+    
     enum CodingKeys: String, CodingKey {
         case idMeal
         case strMeal
@@ -37,7 +37,7 @@ struct RecipeDetail: Decodable {
              strMeasure13, strMeasure14, strMeasure15, strMeasure16, strMeasure17, strMeasure18,
              strMeasure19, strMeasure20
     }
-
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -52,6 +52,10 @@ struct RecipeDetail: Decodable {
         
         ingredients = (1...20).compactMap { try? container.decode(String.self, forKey: CodingKeys(stringValue: "strIngredient\($0)")! ) }
         measurements = (1...20).compactMap { try? container.decode(String.self, forKey: CodingKeys(stringValue: "strMeasure\($0)")! ) }
+        
+        // Remove the nil or empty entry
+        ingredients = ingredients.filter { !$0.isEmpty }
+        measurements = measurements.filter { !$0.isEmpty }
     }
 }
 

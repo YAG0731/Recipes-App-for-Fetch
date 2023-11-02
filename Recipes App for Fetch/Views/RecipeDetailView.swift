@@ -9,11 +9,11 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     @ObservedObject var viewModel: RecipeDetailViewModel
-
+    
     init(recipeID: String) {
         self.viewModel = RecipeDetailViewModel(recipeID: recipeID)
     }
-
+    
     var body: some View {
         if let recipe = viewModel.recipe {
             ScrollView {
@@ -26,8 +26,6 @@ struct RecipeDetailView: View {
                     ForEach(0..<min(recipe.ingredients.count, recipe.measurements.count), id: \.self) { index in
                         Text("\(recipe.ingredients[index]): \(recipe.measurements[index])")
                     }
-
-                    // You can add more UI elements to display other recipe details
                 }
                 .padding()
             }

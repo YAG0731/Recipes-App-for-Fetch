@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var viewModel: HomeViewModel
-
+    
     var body: some View {
         NavigationView {
             List {
@@ -25,7 +25,7 @@ struct HomeView: View {
                             }
                     }
                 }
-
+                
                 Section(header: Text("Recipes")) {
                     ForEach(viewModel.recipes, id: \.idMeal) { recipe in
                         NavigationLink(destination: RecipeDetailView(recipeID: recipe.idMeal)) {
