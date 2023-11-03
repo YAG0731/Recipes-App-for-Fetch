@@ -28,7 +28,6 @@ final class Recipes_App_for_FetchUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch() // Launch the app before performing UI tests
         
-        // Tap the search bar
         let searchBar = app.textFields["Search for dessert recipes"]
         XCTAssertTrue(searchBar.exists, "Search bar doesn't exist")
         searchBar.tap()
@@ -39,7 +38,7 @@ final class Recipes_App_for_FetchUITests: XCTestCase {
         // Type text into the search bar
         searchBar.typeText("Chocolate Avocado")
         
-        let recipesCount = recipesCountLabel.label // This will give you the text in the label
+        let recipesCount = recipesCountLabel.label
         XCTAssertEqual(recipesCount, "1 recipe found", "Recipes count is not as expected")
     }
     

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 enum NetworkError: Error {
     case invalidURL
@@ -15,32 +14,23 @@ enum NetworkError: Error {
     case noData
 }
 
-
 class RecipeService {
     static let shared = RecipeService()
-    
+
     private init() {}
 
-    func getAllRecipes(completion: @escaping (Result<[Recipe], Error>) -> Void) {
+    func getAllRecipes() async throws -> [Recipe]? {
         guard let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") else {
-            completion(.failure(NetworkError.invalidURL))
-            return
+            throw NetworkError.invalidURL
         }
-        
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                let mealsResponse = try decoder.decode(MealsResponse.self, from: data!)
-                completion(.success(mealsResponse.meals))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decoder = JSONDecoder()
+            let mealsResponse = try decoder.decode(MealsResponse.self, from: data)
+            return mealsResponse.meals
+        } catch {
+            throw error
+        }
     }
 }
-

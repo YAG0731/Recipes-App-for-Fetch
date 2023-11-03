@@ -37,6 +37,7 @@ struct RecipeRow: View {
                 } else {
                     // Display an activity indicator while loading
                     ProgressView()
+                        .frame(alignment: .center)
                 }
             }
             .frame(width:160, height: 220, alignment: .top)

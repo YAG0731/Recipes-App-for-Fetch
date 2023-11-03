@@ -17,8 +17,6 @@ final class HomeViewModelTests: XCTestCase {
     }
 
     override func tearDown() {
-        viewModel = nil
-        //super.teardown()
     }
 
     

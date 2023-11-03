@@ -9,36 +9,34 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     @ObservedObject var viewModel: RecipeDetailViewModel
-    @State private var image: Image = Image("Fetch_PrimaryLogo")
     
     init(recipeID: String) {
         self.viewModel = RecipeDetailViewModel(recipeID: recipeID)
-        print(recipeID)
         viewModel.loadRecipeDetails()
     }
     
     var body: some View {
         if let recipe = viewModel.recipe {
-            VStack(spacing: -70) {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 150)
-                    .cornerRadius(10)
-                    .shadow(radius: 3)
-                    .onAppear {
-                        // Load the image from the URL
-                        if let url = URL(string: recipe.strMealThumb) {
-                            URLSession.shared.dataTask(with: url) { data, response, error in
-                                if let data = data, let uiImage = UIImage(data: data) {
-                                    image = Image(uiImage: uiImage)
-                                }
-                            }.resume()
-                        }
+            VStack(spacing:-70){
+                AsyncImage(url: URL(string: recipe.strMealThumb)) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 150)
+                            .cornerRadius(10)
+                            .shadow(radius: 3)
+                    case .failure:
+                        Image("Fetch_PrimaryLogo")
+                            .resizable()
+                    case .empty:
+                        ProgressView()
                     }
-                    .ignoresSafeArea()
+                }
+                .ignoresSafeArea()
                 
-                ScrollView {
+                ScrollView{
                     VStack {
                         // Display recipe details here
                         Text("\(recipe.strMeal)")
@@ -64,11 +62,11 @@ struct RecipeDetailView: View {
                             HStack {
                                 Text("\(recipe.ingredients[index])")
                                     .fontDesign(.monospaced)
-                                    .padding(3)
+                                    .padding(4)
                                 Spacer()
                                 Text("\(recipe.measurements[index])")
                                     .fontDesign(.monospaced)
-                                    .padding(3)
+                                    .padding(4)
                             }
                             .background(.bar)
                             .border(.gray)
@@ -78,14 +76,7 @@ struct RecipeDetailView: View {
                     .padding()
                 }
             }
-            .onAppear {
-                DispatchQueue.main.async {
-                    viewModel.loadRecipeDetails()
-                }
-                
-            }
             .accessibilityIdentifier("Recipe Detail View")
-
         } else {
             Text("Loading...")
         }
