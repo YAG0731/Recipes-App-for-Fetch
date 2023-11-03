@@ -30,7 +30,6 @@ struct HomeView: View {
                     ForEach(viewModel.recipes, id: \.idMeal) { recipe in
                         NavigationLink(destination: RecipeDetailView(recipeID: recipe.idMeal)) {
                             HStack {
-                                Spacer()
                                 RecipeRow(recipe: recipe)
                                 Spacer()
                             }

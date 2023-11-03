@@ -17,12 +17,13 @@ struct RecipeDetailView: View {
     
     var body: some View {
         if let recipe = viewModel.recipe {
-            VStack(spacing: -50) {
+            VStack(spacing: -70) {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(height: 150)
                     .cornerRadius(10)
+                    .shadow(radius: 3)
                     .onAppear {
                         // Load the image from the URL
                         if let url = URL(string: recipe.strMealThumb) {
@@ -50,13 +51,13 @@ struct RecipeDetailView: View {
                         Text("\(recipe.strInstructions)")
                             .fontDesign(.monospaced)
                             .font(.system(size: 13))
-                            .padding(0)
                         
                         Text("Ingredients:")
                             .font(.headline)
                             .position(x:40)
                             .padding([.top,.leading],10)
-                                                // Loop through ingredients and measurements
+                        
+                        // Loop through ingredients and measurements
                         ForEach(0..<min(recipe.ingredients.count, recipe.measurements.count), id: \.self) { index in
                             HStack{
                                 Text("\(recipe.ingredients[index])")
@@ -68,7 +69,7 @@ struct RecipeDetailView: View {
                                     .padding(3)
                             }
                             .background(.bar)
-                            .border(.gray)
+                            .border(.gray).opacity(0.8)
                         }
                     }
                     .padding()

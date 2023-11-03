@@ -12,7 +12,7 @@ struct RecipeRow: View {
     @State private var image: Image = Image("Fetch_PrimaryLogo")
     
     var body: some View {
-        VStack {
+        HStack {
             image
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -30,7 +30,7 @@ struct RecipeRow: View {
                 }
             
             Text(recipe.strMeal)
-                .font(.headline)
+                .fontWeight(.heavy)
                 .fontDesign(.serif)
                 .padding([.top],5)
         }
