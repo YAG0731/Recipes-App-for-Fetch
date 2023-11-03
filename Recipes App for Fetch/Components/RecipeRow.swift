@@ -16,7 +16,7 @@ struct RecipeRow: View {
             image
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(height: 150)
+                .frame(height: 100)
                 .cornerRadius(10)
                 .onAppear {
                     // Load the image from the URL
@@ -30,7 +30,7 @@ struct RecipeRow: View {
                 }
             
             Text(recipe.strMeal)
-                .fontWeight(.heavy)
+                .fontWeight(.bold)
                 .fontDesign(.serif)
                 .padding([.top],5)
         }

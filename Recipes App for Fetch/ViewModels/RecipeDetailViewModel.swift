@@ -7,31 +7,32 @@
 
 import Foundation
 
+import Combine
+
 class RecipeDetailViewModel: ObservableObject {
     @Published var recipe: RecipeDetail?
     private let recipeID: String
     
+    private var cancellables = Set<AnyCancellable>()
+    
     init(recipeID: String) {
         self.recipeID = recipeID
-        fetchRecipeDetails()
     }
     
     func fetchRecipeDetails() {
-        if let url = URL(string: "https://themealdb.com/api/json/v1/1/lookup.php?i=\(recipeID)") {
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                if let data = data {
-                    if var decodedResponse = try? JSONDecoder().decode(RecipeResponse.self, from: data) {
-                        if let recipeDetail = decodedResponse.meals.first {
-                            DispatchQueue.main.async {
-                                self.recipe = recipeDetail
-                            }
-                            return
-                        }
-                    }
-                }
-                // Handle errors here, such as network or decoding errors
-            }.resume()
+        guard let url = URL(string: "https://themealdb.com/api/json/v1/1/lookup.php?i=\(recipeID)") else {
+            return
         }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map(\.data)
+            .decode(type: RecipeResponse.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+            }, receiveValue: { recipeDetail in
+                print(recipeDetail.meals)
+                self.recipe = recipeDetail.meals.first
+            })
+            .store(in: &cancellables)
     }
-    
 }

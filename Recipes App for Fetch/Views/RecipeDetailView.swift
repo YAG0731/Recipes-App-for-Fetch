@@ -13,6 +13,8 @@ struct RecipeDetailView: View {
     
     init(recipeID: String) {
         self.viewModel = RecipeDetailViewModel(recipeID: recipeID)
+        print(recipeID)
+        self.viewModel.fetchRecipeDetails()
     }
     
     var body: some View {
@@ -35,7 +37,7 @@ struct RecipeDetailView: View {
                         }
                     }
                     .ignoresSafeArea()
-               
+                
                 ScrollView {
                     VStack {
                         // Display recipe details here

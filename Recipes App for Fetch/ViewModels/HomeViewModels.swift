@@ -6,10 +6,7 @@
 //
 
 import SwiftUI
-
-struct MealsResponse: Decodable {
-    var meals: [Recipe]
-}
+import Combine
 
 enum RecipeSortOption {
     case alphabetical
@@ -21,32 +18,23 @@ class HomeViewModel: ObservableObject {
     @Published var sortOption: RecipeSortOption = .alphabetical
     @Published var selectedRecipe: Recipe?
     
+    private var cancellables = Set<AnyCancellable>()
+    
     func fetchRecipes() {
-        recipes = []
+        guard let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") else { return }
         
-        if let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") {
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                if let data = data {
-                    if var decodedResponse = try? JSONDecoder().decode(MealsResponse.self, from: data) {
-                        decodedResponse.meals = decodedResponse.meals.filter { meal in
-                            if meal.strMeal.isEmpty || meal.idMeal.isEmpty {
-                                print("Null or empty value found: strMeal = \(meal.strMeal), idMeal = \(meal.idMeal)")
-                                return false
-                            }
-                            return true
-                        }
-                        
-                        DispatchQueue.main.async {
-                            self.recipes = decodedResponse.meals
-                            self.sortRecipes()
-                        }
-                        return
-                    }
-                }
-            }.resume()
-        }
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map(\.data)
+            .decode(type: MealsResponse.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+            }, receiveValue: { mealsResponse in
+                self.recipes = mealsResponse.meals
+                self.sortRecipes()
+            })
+            .store(in: &cancellables)
     }
-
+    
     func toggleSortOrder() {
         switch sortOption {
         case .alphabetical:
