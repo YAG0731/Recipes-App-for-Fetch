@@ -9,40 +9,43 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var viewModel: HomeViewModel
+    @State private var searchText = ""
     
     var body: some View {
         NavigationView {
-            List {
-                Section() {
-                    HStack {
-                        Text("Desserts")
-                        Spacer()
-                        Image(viewModel.sortOption == .alphabetical ? "icons8-alphabetical-sorting-2-72(@3×)" : "icons8-sort-72(@3×)")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .onTapGesture {
-                                viewModel.toggleSortOrder()
-                            }
-                    }
+            VStack{
+                HStack {
+                    SearchBar(text: $searchText, placeholder: "Search for dessert recipes")
+
+                    Spacer()
+                    
+                    Image(viewModel.sortOption == .alphabetical ? "icons8-alphabetical-sorting-2-72(@3×)" : "icons8-sort-72(@3×)")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .onTapGesture {
+                            viewModel.toggleSortOrder()
+                        }
                 }
+                .padding([.leading,.trailing],10)
                 
-                Section(header: Text("Recipes")) {
-                    ForEach(viewModel.recipes, id: \.idMeal) { recipe in
-                        NavigationLink(destination: RecipeDetailView(recipeID: recipe.idMeal)) {
-                            HStack {
-                                RecipeRow(recipe: recipe)
-                                Spacer()
+                List {
+                    Section(header: Text("Recipes")) {
+                        ForEach(viewModel.filteredRecipes(searchText: searchText), id: \.idMeal) { recipe in
+                            NavigationLink(destination: RecipeDetailView(recipeID: recipe.idMeal)) {
+                                HStack {
+                                    RecipeRow(recipe: recipe)
+                                    Spacer()
+                                }
                             }
                         }
                     }
                 }
+                .listStyle(GroupedListStyle())
+                .onAppear {
+                    viewModel.fetchRecipes()
+                }
             }
-            .listStyle(GroupedListStyle())
-            .onAppear {
-                viewModel.fetchRecipes()
-            }
-            .navigationBarTitle("Recipes")
-            .navigationBarTitleDisplayMode(.inline)
+            
         }
     }
 }

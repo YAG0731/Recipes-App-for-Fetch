@@ -23,12 +23,11 @@ class HomeViewModel: ObservableObject {
     
     func fetchRecipes() {
         recipes = []
-
+        
         if let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") {
             URLSession.shared.dataTask(with: url) { data, response, error in
                 if let data = data {
                     if var decodedResponse = try? JSONDecoder().decode(MealsResponse.self, from: data) {
-                        // Filter out any null or empty values and print them
                         decodedResponse.meals = decodedResponse.meals.filter { meal in
                             if meal.strMeal.isEmpty || meal.idMeal.isEmpty {
                                 print("Null or empty value found: strMeal = \(meal.strMeal), idMeal = \(meal.idMeal)")
@@ -44,7 +43,6 @@ class HomeViewModel: ObservableObject {
                         return
                     }
                 }
-                // Handle errors here, such as network or decoding errors
             }.resume()
         }
     }
@@ -56,7 +54,7 @@ class HomeViewModel: ObservableObject {
         case .reverseAlphabetical:
             sortOption = .alphabetical
         }
-        fetchRecipes()
+        sortRecipes()
     }
     
     func sortRecipes() {
@@ -65,6 +63,14 @@ class HomeViewModel: ObservableObject {
             recipes.sort { $0.strMeal < $1.strMeal }
         case .reverseAlphabetical:
             recipes.sort { $0.strMeal > $1.strMeal }
+        }
+    }
+    
+    func filteredRecipes(searchText: String) -> [Recipe] {
+        if searchText.isEmpty {
+            return recipes
+        } else {
+            return recipes.filter { $0.strMeal.localizedCaseInsensitiveContains(searchText) }
         }
     }
     

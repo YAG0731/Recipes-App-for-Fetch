@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		370794FC2AF47FAF009DC4D9 /* RecipeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370794FB2AF47FAF009DC4D9 /* RecipeService.swift */; };
+		370794FE2AF47FBB009DC4D9 /* RecipeDetailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370794FD2AF47FBB009DC4D9 /* RecipeDetailService.swift */; };
+		370795022AF48495009DC4D9 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370795012AF48495009DC4D9 /* SearchBar.swift */; };
 		372C560F2AF17DA2004FCC68 /* Recipes_App_for_FetchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372C560E2AF17DA2004FCC68 /* Recipes_App_for_FetchApp.swift */; };
 		372C56112AF17DA2004FCC68 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372C56102AF17DA2004FCC68 /* ContentView.swift */; };
 		372C56132AF17DA3004FCC68 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 372C56122AF17DA3004FCC68 /* Assets.xcassets */; };
@@ -41,6 +44,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		370794FB2AF47FAF009DC4D9 /* RecipeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeService.swift; sourceTree = "<group>"; };
+		370794FD2AF47FBB009DC4D9 /* RecipeDetailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailService.swift; sourceTree = "<group>"; };
+		370795012AF48495009DC4D9 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		370795032AF48C71009DC4D9 /* Recipes-App-for-Fetch-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Recipes-App-for-Fetch-Info.plist"; sourceTree = SOURCE_ROOT; };
 		372C560B2AF17DA2004FCC68 /* Recipes App for Fetch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Recipes App for Fetch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		372C560E2AF17DA2004FCC68 /* Recipes_App_for_FetchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipes_App_for_FetchApp.swift; sourceTree = "<group>"; };
 		372C56102AF17DA2004FCC68 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -85,6 +92,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		370794FA2AF47F77009DC4D9 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				370794FB2AF47FAF009DC4D9 /* RecipeService.swift */,
+				370794FD2AF47FBB009DC4D9 /* RecipeDetailService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		370795002AF48481009DC4D9 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				37D73A252AF28B7600C2293B /* RecipeRow.swift */,
+				370795012AF48495009DC4D9 /* SearchBar.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		372C56022AF17DA2004FCC68 = {
 			isa = PBXGroup;
 			children = (
@@ -108,8 +133,11 @@
 		372C560D2AF17DA2004FCC68 /* Recipes App for Fetch */ = {
 			isa = PBXGroup;
 			children = (
+				370795032AF48C71009DC4D9 /* Recipes-App-for-Fetch-Info.plist */,
+				370795002AF48481009DC4D9 /* Components */,
 				372C56402AF17E17004FCC68 /* Views */,
 				372C563B2AF17E0F004FCC68 /* ViewModels */,
+				370794FA2AF47F77009DC4D9 /* Services */,
 				372C56382AF17E06004FCC68 /* Models */,
 				372C560E2AF17DA2004FCC68 /* Recipes_App_for_FetchApp.swift */,
 				372C56102AF17DA2004FCC68 /* ContentView.swift */,
@@ -167,7 +195,6 @@
 			children = (
 				37FC2CC82AF3F70100A09179 /* RecipeDetailView.swift */,
 				372C56422AF17E17004FCC68 /* HomeView.swift */,
-				37D73A252AF28B7600C2293B /* RecipeRow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -307,10 +334,13 @@
 				37FC2CCB2AF3F72100A09179 /* RecipeDetailViewModel.swift in Sources */,
 				37FC2CC72AF3F45500A09179 /* RecipeDetail.swift in Sources */,
 				37D73A262AF28B7600C2293B /* RecipeRow.swift in Sources */,
+				370795022AF48495009DC4D9 /* SearchBar.swift in Sources */,
 				372C56112AF17DA2004FCC68 /* ContentView.swift in Sources */,
 				372C560F2AF17DA2004FCC68 /* Recipes_App_for_FetchApp.swift in Sources */,
+				370794FC2AF47FAF009DC4D9 /* RecipeService.swift in Sources */,
 				37FC2CC52AF3EEDB00A09179 /* Recipe.swift in Sources */,
 				372C563E2AF17E10004FCC68 /* HomeViewModels.swift in Sources */,
+				370794FE2AF47FBB009DC4D9 /* RecipeDetailService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,9 +506,9 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Recipes App for Fetch/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Recipes-App-for-Fetch-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -504,9 +534,9 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Recipes App for Fetch/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Recipes-App-for-Fetch-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
