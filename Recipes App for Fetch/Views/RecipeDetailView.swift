@@ -14,7 +14,6 @@ struct RecipeDetailView: View {
     init(recipeID: String) {
         self.viewModel = RecipeDetailViewModel(recipeID: recipeID)
         print(recipeID)
-        self.viewModel.fetchRecipeDetails()
     }
     
     var body: some View {
@@ -47,8 +46,8 @@ struct RecipeDetailView: View {
                         
                         Text("Instructions:")
                             .font(.headline)
-                            .position(x:40)
-                            .padding([.top,.leading],10)
+                            .position(x: 40)
+                            .padding([.top, .leading], 10)
                         
                         Text("\(recipe.strInstructions)")
                             .fontDesign(.monospaced)
@@ -56,12 +55,12 @@ struct RecipeDetailView: View {
                         
                         Text("Ingredients:")
                             .font(.headline)
-                            .position(x:40)
-                            .padding([.top,.leading],10)
+                            .position(x: 40)
+                            .padding([.top, .leading], 10)
                         
                         // Loop through ingredients and measurements
                         ForEach(0..<min(recipe.ingredients.count, recipe.measurements.count), id: \.self) { index in
-                            HStack{
+                            HStack {
                                 Text("\(recipe.ingredients[index])")
                                     .fontDesign(.monospaced)
                                     .padding(3)
@@ -71,11 +70,18 @@ struct RecipeDetailView: View {
                                     .padding(3)
                             }
                             .background(.bar)
-                            .border(.gray).opacity(0.8)
+                            .border(.gray)
+                            .opacity(0.8)
                         }
                     }
                     .padding()
                 }
+            }
+            .onAppear {
+                DispatchQueue.main.async {
+                    viewModel.loadRecipeDetails()
+                }
+                
             }
         } else {
             Text("Loading...")

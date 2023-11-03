@@ -10,13 +10,14 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var viewModel: HomeViewModel
     @State private var searchText = ""
+    let columns: [GridItem] = [GridItem(.adaptive(minimum: 160), spacing: 15)]
     
     var body: some View {
         NavigationView {
-            VStack{
+            VStack(spacing: 0) {
                 HStack {
                     SearchBar(text: $searchText, placeholder: "Search for dessert recipes")
-
+                    
                     Spacer()
                     
                     Image(viewModel.sortOption == .alphabetical ? "icons8-alphabetical-sorting-2-72(@3×)" : "icons8-sort-72(@3×)")
@@ -26,26 +27,31 @@ struct HomeView: View {
                             viewModel.toggleSortOrder()
                         }
                 }
-                .padding([.leading,.trailing],10)
+                .padding([.leading, .trailing], 10)
                 
-                List {
-                    Section(header: Text("Recipes")) {
+                HStack {
+                    Spacer()
+                    
+                    Text("\(viewModel.filteredRecipes(searchText: searchText).count) \(viewModel.filteredRecipes(searchText: searchText).count != 1 ? "recipes" : "recipe") found")
+                        .font(.system(.caption2, design: .monospaced))
+                        .padding(10)
+                }
+                
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 20) {
                         ForEach(viewModel.filteredRecipes(searchText: searchText), id: \.idMeal) { recipe in
                             NavigationLink(destination: RecipeDetailView(recipeID: recipe.idMeal)) {
-                                HStack {
-                                    RecipeRow(recipe: recipe)
-                                    Spacer()
-                                }
+                                RecipeRow(recipe: recipe)
                             }
                         }
                     }
+                    .padding([.leading, .trailing], 20)
+                    .padding(.top, 10)
                 }
-                .listStyle(GroupedListStyle())
                 .onAppear {
-                    viewModel.fetchRecipes()
+                    viewModel.loadAllRecipes()
                 }
             }
-            
         }
     }
 }
