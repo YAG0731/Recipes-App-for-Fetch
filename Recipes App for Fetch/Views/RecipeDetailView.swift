@@ -17,7 +17,7 @@ struct RecipeDetailView: View {
     
     var body: some View {
         if let recipe = viewModel.recipe {
-            VStack(spacing: 0) {
+            VStack(spacing: -50) {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -74,7 +74,6 @@ struct RecipeDetailView: View {
                     .padding()
                 }
             }
-            
         } else {
             Text("Loading...")
         }
