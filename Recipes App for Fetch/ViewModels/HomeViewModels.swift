@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 
 enum RecipeSortOption {
     case alphabetical
@@ -17,22 +16,27 @@ class HomeViewModel: ObservableObject {
     @Published var recipes: [Recipe] = []
     @Published var sortOption: RecipeSortOption = .alphabetical
     @Published var selectedRecipe: Recipe?
+    @Published var loading: Bool = false
+    @Published var networkError: NetworkError? = nil
+    @Published var searchText: String = ""
     
-    private var cancellables = Set<AnyCancellable>()
-    
-    func fetchRecipes() {
-        guard let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") else { return }
+    func loadAllRecipes() {
+        loading = true
+        networkError = nil
         
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map(\.data)
-            .decode(type: MealsResponse.self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-            }, receiveValue: { mealsResponse in
-                self.recipes = mealsResponse.meals
-                self.sortRecipes()
-            })
-            .store(in: &cancellables)
+        RecipeService.shared.getAllRecipes { result in
+            DispatchQueue.main.async {
+                self.loading = false
+                
+                switch result {
+                case .success(let recipes):
+                    self.recipes = recipes
+                    self.sortRecipes()
+                case .failure(_):
+                    self.networkError = .requestFailed
+                }
+            }
+        }
     }
     
     func toggleSortOrder() {

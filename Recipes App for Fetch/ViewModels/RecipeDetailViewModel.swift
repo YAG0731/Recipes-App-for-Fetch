@@ -19,7 +19,7 @@ class RecipeDetailViewModel: ObservableObject {
         self.recipeID = recipeID
     }
     
-    func fetchRecipeDetails() {
+    func loadRecipeDetails() {
         guard let url = URL(string: "https://themealdb.com/api/json/v1/1/lookup.php?i=\(recipeID)") else {
             return
         }

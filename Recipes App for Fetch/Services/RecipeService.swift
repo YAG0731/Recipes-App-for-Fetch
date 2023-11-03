@@ -21,7 +21,7 @@ class RecipeService {
     
     private init() {}
 
-    func getRecipes(completion: @escaping (Result<[Recipe], Error>) -> Void) {
+    func getAllRecipes(completion: @escaping (Result<[Recipe], Error>) -> Void) {
         guard let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") else {
             completion(.failure(NetworkError.invalidURL))
             return
