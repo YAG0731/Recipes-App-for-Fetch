@@ -29,7 +29,7 @@ struct RecipeRow: View {
                         }
 
                 } else if phase.error != nil {
-                    // Handle the error or display a placeholder image
+                    // Display a placeholder image
                     Image("Fetch_PrimaryLogo")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -43,9 +43,9 @@ struct RecipeRow: View {
             .background(LinearGradient(gradient: Gradient(colors: [Color(.gray).opacity(0.3),Color(.gray)]), startPoint: .top, endPoint: .bottomTrailing))
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             .shadow(color: .gray, radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
-            
-            
+   
         }
+        .accessibilityIdentifier("RecipeRow")
     }
 }
 

@@ -14,6 +14,7 @@ struct RecipeDetailView: View {
     init(recipeID: String) {
         self.viewModel = RecipeDetailViewModel(recipeID: recipeID)
         print(recipeID)
+        viewModel.loadRecipeDetails()
     }
     
     var body: some View {
@@ -83,6 +84,8 @@ struct RecipeDetailView: View {
                 }
                 
             }
+            .accessibilityIdentifier("Recipe Detail View")
+
         } else {
             Text("Loading...")
         }
