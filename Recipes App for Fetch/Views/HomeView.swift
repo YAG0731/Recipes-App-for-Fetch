@@ -43,6 +43,7 @@ struct HomeView: View {
                 viewModel.fetchRecipes()
             }
             .navigationBarTitle("Recipes")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
