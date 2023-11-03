@@ -35,6 +35,7 @@ struct HomeView: View {
                     Text("\(viewModel.filteredRecipes(searchText: searchText).count) \(viewModel.filteredRecipes(searchText: searchText).count != 1 ? "recipes" : "recipe") found")
                         .font(.system(.caption2, design: .monospaced))
                         .padding(10)
+                        .accessibilityIdentifier("recipes found")
                 }
                 
                 ScrollView {

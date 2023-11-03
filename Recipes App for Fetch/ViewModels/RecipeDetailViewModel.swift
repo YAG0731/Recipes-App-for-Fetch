@@ -5,14 +5,12 @@
 //  Created by Yunao Guo on 11/2/23.
 //
 
-import Foundation
-
 import Combine
+import SwiftUI
 
 class RecipeDetailViewModel: ObservableObject {
     @Published var recipe: RecipeDetail?
     private let recipeID: String
-    
     private var cancellables = Set<AnyCancellable>()
     
     init(recipeID: String) {
@@ -20,19 +18,16 @@ class RecipeDetailViewModel: ObservableObject {
     }
     
     func loadRecipeDetails() {
-        guard let url = URL(string: "https://themealdb.com/api/json/v1/1/lookup.php?i=\(recipeID)") else {
-            return
+        Task {
+            do {
+                if let recipeDetail = try await RecipeDetailService.shared.getRecipeDetailsById(recipeID: recipeID) {
+                    DispatchQueue.main.async {
+                        self.recipe = recipeDetail
+                    }
+                }
+            } catch {
+                print("Error loading recipe details: \(error)")
+            }
         }
-        
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map(\.data)
-            .decode(type: RecipeResponse.self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-            }, receiveValue: { recipeDetail in
-                print(recipeDetail.meals)
-                self.recipe = recipeDetail.meals.first
-            })
-            .store(in: &cancellables)
     }
 }

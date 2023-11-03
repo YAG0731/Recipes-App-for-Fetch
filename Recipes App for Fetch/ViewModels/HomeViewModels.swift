@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 enum RecipeSortOption {
     case alphabetical
@@ -20,20 +21,31 @@ class HomeViewModel: ObservableObject {
     @Published var networkError: NetworkError? = nil
     @Published var searchText: String = ""
     
+    private var cancellables = Set<AnyCancellable>()
+    
     func loadAllRecipes() {
         loading = true
         networkError = nil
         
-        RecipeService.shared.getAllRecipes { result in
-            DispatchQueue.main.async {
-                self.loading = false
-                
-                switch result {
-                case .success(let recipes):
-                    self.recipes = recipes
-                    self.sortRecipes()
-                case .failure(_):
+        Task {
+            do {
+                if let recipes = try await RecipeService.shared.getAllRecipes() {
+                    await MainActor.run {
+                        self.recipes = recipes
+                        self.sortRecipes()
+                        self.loading = false
+                    }
+                } else {
+                    await MainActor.run {
+                        self.networkError = .requestFailed
+                        self.loading = false
+                    }
+                }
+            } catch {
+                await MainActor.run {
                     self.networkError = .requestFailed
+                    self.loading = false
+                    print("Error loading recipes: \(error)")
                 }
             }
         }

@@ -14,10 +14,10 @@ struct RecipeDetail: Decodable {
     let strInstructions: String
     var ingredients: [String]
     var measurements: [String]
-    let strYoutube: String
-    let strSource: String
-    let strCategory: String
-    let strArea: String
+    let strYoutube: String?
+    let strSource: String?
+    let strCategory: String?
+    let strArea: String?
     
     enum CodingKeys: String, CodingKey {
         case idMeal
@@ -45,10 +45,10 @@ struct RecipeDetail: Decodable {
         strMeal = try container.decode(String.self, forKey: .strMeal)
         strMealThumb = try container.decode(String.self, forKey: .strMealThumb)
         strInstructions = try container.decode(String.self, forKey: .strInstructions)
-        strYoutube = try container.decode(String.self, forKey: .strYoutube)
-        strSource = try container.decode(String.self, forKey: .strSource)
-        strCategory = try container.decode(String.self, forKey: .strCategory)
-        strArea = try container.decode(String.self, forKey: .strArea)
+        strYoutube = try container.decodeIfPresent(String.self, forKey: .strYoutube)
+        strSource = try container.decodeIfPresent(String.self, forKey: .strSource)
+        strCategory = try container.decodeIfPresent(String.self, forKey: .strCategory)
+        strArea = try container.decodeIfPresent(String.self, forKey: .strArea)
         
         ingredients = (1...20).compactMap { try? container.decode(String.self, forKey: CodingKeys(stringValue: "strIngredient\($0)")! ) }
         measurements = (1...20).compactMap { try? container.decode(String.self, forKey: CodingKeys(stringValue: "strMeasure\($0)")! ) }
