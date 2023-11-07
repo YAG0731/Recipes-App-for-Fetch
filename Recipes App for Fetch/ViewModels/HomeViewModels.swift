@@ -21,29 +21,25 @@ class HomeViewModel: ObservableObject {
     @Published var loading: Bool = false
     @Published var networkError: NetworkError? = nil
     @Published var searchText: String = ""
-
+    
     func loadAllRecipes() {
         loading = true
         networkError = nil
-
+        
         Task {
             do {
                 if let recipes = try await RecipeService.shared.getAllRecipes() {
                     self.recipes = recipes
-                    sortRecipes()
+                    sortRecipes()// Display the first 8 recipes
                     loading = false
                 } else {
-                    networkError = .noData
+                    networkError = .requestFailed
                     loading = false
                 }
-            } catch {
-                networkError = .requestFailed
-                loading = false
-                print("Error loading recipes: \(error)")
             }
         }
     }
-
+    
     func toggleSortOrder() {
         switch sortOption {
         case .alphabetical:
@@ -53,7 +49,7 @@ class HomeViewModel: ObservableObject {
         }
         sortRecipes()
     }
-
+    
     func sortRecipes() {
         switch sortOption {
         case .alphabetical:
@@ -62,7 +58,7 @@ class HomeViewModel: ObservableObject {
             recipes.sort { $0.strMeal > $1.strMeal }
         }
     }
-
+    
     func filteredRecipes(searchText: String) -> [Recipe] {
         if searchText.isEmpty {
             return recipes
@@ -70,7 +66,7 @@ class HomeViewModel: ObservableObject {
             return recipes.filter { $0.strMeal.localizedCaseInsensitiveContains(searchText) }
         }
     }
-
+    
     func onRecipeSelected(recipe: Recipe) {
         selectedRecipe = recipe
     }

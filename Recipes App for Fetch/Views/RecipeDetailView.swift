@@ -9,9 +9,11 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     @ObservedObject var viewModel: RecipeDetailViewModel
+    let recipeID: String
     
     init(recipeID: String) {
-        self.viewModel = RecipeDetailViewModel(recipeID: recipeID)
+        self.viewModel = RecipeDetailViewModel()
+        self.recipeID = recipeID
     }
     
     var body: some View {
@@ -75,14 +77,14 @@ struct RecipeDetailView: View {
                     .padding()
                 }
             }
-            .onAppear {
-                Task {
-                    viewModel.loadRecipeDetails()
-                }
-            }
             .accessibilityIdentifier("Recipe Detail View")
         } else {
             Text("Loading...")
+                .onAppear {
+                    Task {
+                        viewModel.loadRecipeDetails(recipeID: recipeID)
+                    }
+                }
         }
     }
 }
