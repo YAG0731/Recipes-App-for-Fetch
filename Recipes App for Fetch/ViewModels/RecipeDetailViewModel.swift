@@ -10,14 +10,8 @@ import SwiftUI
 
 class RecipeDetailViewModel: ObservableObject {
     @Published var recipe: RecipeDetail?
-    private let recipeID: String
-    private var cancellables = Set<AnyCancellable>()
     
-    init(recipeID: String) {
-        self.recipeID = recipeID
-    }
-    
-    func loadRecipeDetails() {
+    func loadRecipeDetails(recipeID: String) {
         Task {
             do {
                 if let recipeDetail = try await RecipeDetailService.shared.getRecipeDetailsById(recipeID: recipeID) {
