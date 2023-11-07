@@ -45,17 +45,22 @@ struct HomeView: View {
                                 RecipeRow(recipe: recipe)
                             }
                         }
+
                     }
                     .padding([.leading, .trailing], 20)
                     .padding(.top, 10)
                 }
                 .onAppear {
-                    viewModel.loadAllRecipes()
+                    Task {
+                        viewModel.loadAllRecipes()
+                    }
                 }
+
             }
         }
     }
 }
+
 
 #Preview {
     let sampleRecipes: [Recipe] = [
