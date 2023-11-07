@@ -12,7 +12,6 @@ struct RecipeDetailView: View {
     
     init(recipeID: String) {
         self.viewModel = RecipeDetailViewModel(recipeID: recipeID)
-        viewModel.loadRecipeDetails()
     }
     
     var body: some View {
