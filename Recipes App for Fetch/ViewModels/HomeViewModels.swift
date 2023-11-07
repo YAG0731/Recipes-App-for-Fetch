@@ -13,6 +13,7 @@ enum RecipeSortOption {
     case reverseAlphabetical
 }
 
+@MainActor
 class HomeViewModel: ObservableObject {
     @Published var recipes: [Recipe] = []
     @Published var sortOption: RecipeSortOption = .alphabetical
@@ -20,37 +21,25 @@ class HomeViewModel: ObservableObject {
     @Published var loading: Bool = false
     @Published var networkError: NetworkError? = nil
     @Published var searchText: String = ""
-    
-    private var cancellables = Set<AnyCancellable>()
-    
+
     func loadAllRecipes() {
         loading = true
         networkError = nil
-        
+
         Task {
             do {
-                if let recipes = try await RecipeService.shared.getAllRecipes() {
-                    await MainActor.run {
-                        self.recipes = recipes
-                        self.sortRecipes()
-                        self.loading = false
-                    }
-                } else {
-                    await MainActor.run {
-                        self.networkError = .requestFailed
-                        self.loading = false
-                    }
-                }
+                let recipes = try await RecipeService.shared.getAllRecipes()
+                self.recipes = recipes
+                sortRecipes()
+                loading = false
             } catch {
-                await MainActor.run {
-                    self.networkError = .requestFailed
-                    self.loading = false
-                    print("Error loading recipes: \(error)")
-                }
+                networkError = .requestFailed
+                loading = false
+                print("Error loading recipes: \(error)")
             }
         }
     }
-    
+
     func toggleSortOrder() {
         switch sortOption {
         case .alphabetical:
@@ -60,7 +49,7 @@ class HomeViewModel: ObservableObject {
         }
         sortRecipes()
     }
-    
+
     func sortRecipes() {
         switch sortOption {
         case .alphabetical:
@@ -69,7 +58,7 @@ class HomeViewModel: ObservableObject {
             recipes.sort { $0.strMeal > $1.strMeal }
         }
     }
-    
+
     func filteredRecipes(searchText: String) -> [Recipe] {
         if searchText.isEmpty {
             return recipes
@@ -77,7 +66,7 @@ class HomeViewModel: ObservableObject {
             return recipes.filter { $0.strMeal.localizedCaseInsensitiveContains(searchText) }
         }
     }
-    
+
     func onRecipeSelected(recipe: Recipe) {
         selectedRecipe = recipe
     }

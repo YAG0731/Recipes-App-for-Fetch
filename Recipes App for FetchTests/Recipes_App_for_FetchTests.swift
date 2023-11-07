@@ -24,28 +24,30 @@ final class Recipes_App_for_FetchTests: XCTestCase {
         
         do {
             let recipes = try await recipeService.getAllRecipes()
-            XCTAssertFalse(recipes!.isEmpty, "Fetched recipes successfully")
+            XCTAssertFalse(recipes.isEmpty, "Fetched recipes successfully")
         } catch {
             XCTFail("Failed to fetch recipes: \(error)")
         }
     }
 
     
-    func testLoadAllRecipes() {
+    @MainActor func testLoadAllRecipes() {
         let viewModel = HomeViewModel()
         let expectation = XCTestExpectation(description: "Load all recipes")
-        
+
+        let observer = viewModel.$recipes
+            .sink { _ in
+                expectation.fulfill()
+            }
+
         viewModel.loadAllRecipes()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            XCTAssertTrue(!viewModel.recipes.isEmpty, "Recipes loaded successfully")
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 10) // Adjust the timeout as needed
+
+        wait(for: [expectation], timeout: 2)
+        observer.cancel()
     }
+
     
-    func testToggleSortOrder() {
+    @MainActor func testToggleSortOrder() {
         let viewModel = HomeViewModel()
         viewModel.sortOption = .alphabetical
         viewModel.toggleSortOrder()
@@ -55,7 +57,7 @@ final class Recipes_App_for_FetchTests: XCTestCase {
         XCTAssertEqual(viewModel.sortOption, .alphabetical, "Toggled sort order again")
     }
     
-    func testFilteredRecipes() {
+    @MainActor func testFilteredRecipes() {
         let viewModel = HomeViewModel()
         viewModel.recipes = [
             Recipe(idMeal: "1", strMeal: "Pasta", strMealThumb: ""),

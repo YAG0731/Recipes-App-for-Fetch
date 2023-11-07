@@ -76,6 +76,11 @@ struct RecipeDetailView: View {
                     .padding()
                 }
             }
+            .onAppear {
+                Task {
+                    viewModel.loadRecipeDetails()
+                }
+            }
             .accessibilityIdentifier("Recipe Detail View")
         } else {
             Text("Loading...")
