@@ -16,13 +16,18 @@ enum RecipeSortOption {
 @MainActor
 class HomeViewModel: ObservableObject {
     @Published var recipes: [Recipe] = []
+    @Published var displayedRecipes: [Recipe] = [] // Initial recipes to display
     @Published var sortOption: RecipeSortOption = .alphabetical
     @Published var selectedRecipe: Recipe?
     @Published var loading: Bool = false
     @Published var networkError: NetworkError? = nil
     @Published var searchText: String = ""
 
-    func loadAllRecipes() {
+    init() {
+        loadInitialRecipes()
+    }
+
+    func loadInitialRecipes() {
         loading = true
         networkError = nil
 
@@ -30,10 +35,12 @@ class HomeViewModel: ObservableObject {
             do {
                 if let recipes = try await RecipeService.shared.getAllRecipes() {
                     self.recipes = recipes
-                    sortRecipes()
+                    
+                    displayedRecipes = Array(recipes.prefix(8)) 
+                    sortRecipes()// Display the first 8 recipes
                     loading = false
                 } else {
-                    networkError = .noData
+                    networkError = .requestFailed
                     loading = false
                 }
             } catch {
@@ -43,6 +50,16 @@ class HomeViewModel: ObservableObject {
             }
         }
     }
+    
+    func loadMoreRecipes() {
+        if let lastDisplayedRecipeIndex = displayedRecipes.lastIndex(of: displayedRecipes.last ?? Recipe(idMeal: "", strMeal: "", strMealThumb: "")),
+               lastDisplayedRecipeIndex < recipes.count - 1 {
+                // Determine how many more recipes to load, e.g., 8 more
+                let endIndex = min(lastDisplayedRecipeIndex + 8, recipes.count)
+                let moreRecipes = recipes[(lastDisplayedRecipeIndex + 1)...endIndex]
+                displayedRecipes.append(contentsOf: moreRecipes)
+            }
+        }
 
     func toggleSortOrder() {
         switch sortOption {

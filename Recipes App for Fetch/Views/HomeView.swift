@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct HomeView: View {
     @ObservedObject var viewModel: HomeViewModel
     @State private var searchText = ""
@@ -40,26 +42,26 @@ struct HomeView: View {
                 
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(viewModel.filteredRecipes(searchText: searchText), id: \.idMeal) { recipe in
+                        ForEach(viewModel.displayedRecipes, id: \.idMeal) { recipe in
                             NavigationLink(destination: RecipeDetailView(recipeID: recipe.idMeal)) {
                                 RecipeRow(recipe: recipe)
+                                    .onAppear {
+                                        if recipe == viewModel.displayedRecipes.last {
+                                            // Load more recipes when the last one is visible
+                                            viewModel.loadMoreRecipes()
+                                        }
+                                    }
                             }
                         }
-
                     }
                     .padding([.leading, .trailing], 20)
                     .padding(.top, 10)
                 }
-                .onAppear {
-                    Task {
-                        viewModel.loadAllRecipes()
-                    }
-                }
-
             }
         }
     }
 }
+
 
 
 #Preview {
