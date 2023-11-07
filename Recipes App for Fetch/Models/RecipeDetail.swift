@@ -31,7 +31,7 @@ struct RecipeDetail: Decodable {
         strCategory = try container.decodeIfPresent(String.self, forKey: .string("strCategory"))
         strArea = try container.decodeIfPresent(String.self, forKey: .string("strArea"))
 
-        // Dynamically decode ingredients and measurements
+        // Decode ingredients and measurements
         ingredients = (1...20).compactMap { try? container.decode(String.self, forKey: .string("strIngredient\($0)")) }
         measurements = (1...20).compactMap { try? container.decode(String.self, forKey: .string("strMeasure\($0)")) }
 
@@ -58,7 +58,6 @@ struct RecipeDetail: Decodable {
             return DynamicCodingKeys(stringValue: string)!
         }
     }
-
 }
 
 

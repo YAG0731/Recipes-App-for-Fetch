@@ -42,6 +42,14 @@ final class Recipes_App_for_FetchUITests: XCTestCase {
         XCTAssertEqual(recipesCount, "1 recipe found", "Recipes count is not as expected")
     }
     
+    func testRecipeRow() {
+        // Assuming the RecipeRow has a unique accessibility identifier.
+        let recipeRow = app.buttons["Apam balik"]
+        XCTAssertTrue(recipeRow.exists, "Recipe row doesn't exist")
+        
+        recipeRow.tap()
+    
+    }
     
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {

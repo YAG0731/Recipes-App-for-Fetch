@@ -14,20 +14,29 @@ enum NetworkError: Error {
     case noData
 }
 
-class RecipeService {
+protocol RecipeServiceProtocol {
+    func getAllRecipes() async throws -> [Recipe]?
+}
+
+class RecipeService: RecipeServiceProtocol {
     static let shared = RecipeService()
 
     private init() {}
 
-    func getAllRecipes() async throws -> [Recipe] {
+    func getAllRecipes() async throws -> [Recipe]? {
         guard let url = URL(string: "https://themealdb.com/api/json/v1/1/filter.php?c=Dessert") else {
             throw NetworkError.invalidURL
         }
 
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let decoder = JSONDecoder()
-        let mealsResponse = try decoder.decode(MealsResponse.self, from: data)
-        return mealsResponse.meals
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decoder = JSONDecoder()
+            let mealsResponse = try decoder.decode(MealsResponse.self, from: data)
+            return mealsResponse.meals
+        } catch {
+            throw error
+        }
     }
 }
+
 

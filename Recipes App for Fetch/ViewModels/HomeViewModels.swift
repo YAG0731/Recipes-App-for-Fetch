@@ -28,10 +28,14 @@ class HomeViewModel: ObservableObject {
 
         Task {
             do {
-                let recipes = try await RecipeService.shared.getAllRecipes()
-                self.recipes = recipes
-                sortRecipes()
-                loading = false
+                if let recipes = try await RecipeService.shared.getAllRecipes() {
+                    self.recipes = recipes
+                    sortRecipes()
+                    loading = false
+                } else {
+                    networkError = .noData
+                    loading = false
+                }
             } catch {
                 networkError = .requestFailed
                 loading = false

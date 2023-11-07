@@ -9,9 +9,12 @@ import XCTest
 @testable import Recipes_App_for_Fetch
 
 final class Recipes_App_for_FetchTests: XCTestCase {
-    
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    var viewModel: HomeViewModel!
+    var mockRecipeService: RecipeServiceMock!
+
+    @MainActor override func setUpWithError() throws {
+        viewModel = HomeViewModel()
+        mockRecipeService = RecipeServiceMock()
     }
     
     override func tearDownWithError() throws {
@@ -24,26 +27,24 @@ final class Recipes_App_for_FetchTests: XCTestCase {
         
         do {
             let recipes = try await recipeService.getAllRecipes()
-            XCTAssertFalse(recipes.isEmpty, "Fetched recipes successfully")
+            XCTAssertFalse(recipes!.isEmpty, "Fetched recipes successfully")
         } catch {
             XCTFail("Failed to fetch recipes: \(error)")
         }
     }
 
-    
     @MainActor func testLoadAllRecipes() {
         let viewModel = HomeViewModel()
         let expectation = XCTestExpectation(description: "Load all recipes")
 
-        let observer = viewModel.$recipes
-            .sink { _ in
-                expectation.fulfill()
-            }
-
         viewModel.loadAllRecipes()
 
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            XCTAssertTrue(!viewModel.recipes.isEmpty, "Recipes loaded successfully")
+            expectation.fulfill()
+        }
+
         wait(for: [expectation], timeout: 2)
-        observer.cancel()
     }
 
     
@@ -79,4 +80,16 @@ final class Recipes_App_for_FetchTests: XCTestCase {
         }
     }
     
+}
+
+class RecipeServiceMock: RecipeServiceProtocol {
+    var mockedRecipes: [Recipe]?
+
+    func getAllRecipes() async throws -> [Recipe]? {
+        // Return mocked data for testing
+        return [
+            Recipe(idMeal: "1", strMeal: "Recipe 1", strMealThumb: ""),
+            Recipe(idMeal: "2", strMeal: "Recipe 2", strMealThumb: "")
+        ]
+    }
 }

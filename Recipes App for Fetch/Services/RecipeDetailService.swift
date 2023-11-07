@@ -7,7 +7,11 @@
 
 import Foundation
 
-final class RecipeDetailService {
+protocol RecipeDetailServiceProtocol {
+    func getRecipeDetailsById(recipeID: String) async throws -> RecipeDetail?
+}
+
+final class RecipeDetailService: RecipeDetailServiceProtocol {
     static let shared = RecipeDetailService()
     private init() { }
     
@@ -27,3 +31,4 @@ final class RecipeDetailService {
         return nil
     }
 }
+
